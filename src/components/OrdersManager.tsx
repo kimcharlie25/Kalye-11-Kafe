@@ -426,10 +426,6 @@ const OrdersManager: React.FC<OrdersManagerProps> = ({ onBack }) => {
   <div class="divider"></div>
 
   <div class="section">
-    <div class="row">
-      <span class="row-label">Payment Method:</span>
-      <span>${order.payment_method}</span>
-    </div>
     ${order.reference_number ? `
     <div class="row">
       <span class="row-label">Reference #:</span>
@@ -908,7 +904,6 @@ const OrdersManager: React.FC<OrdersManagerProps> = ({ onBack }) => {
                     {selectedOrder.table_number && (
                       <p><strong>Table Number:</strong> #{selectedOrder.table_number}</p>
                     )}
-                    <p><strong>Payment Method:</strong> {selectedOrder.payment_method}</p>
                     <p><strong>Order Date:</strong> {formatDateTime(selectedOrder.created_at)}</p>
                   </div>
                 </div>

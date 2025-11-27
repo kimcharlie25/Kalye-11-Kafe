@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Edit, Trash2, Save, X, ArrowLeft, Coffee, TrendingUp, Package, Users, FolderOpen, CreditCard, Settings, ShoppingCart, LogOut, Boxes } from 'lucide-react';
+import { Plus, Edit, Trash2, Save, X, ArrowLeft, Coffee, TrendingUp, Package, Users, FolderOpen, Settings, ShoppingCart, LogOut, Boxes } from 'lucide-react';
 import { MenuItem, Variation, AddOn } from '../types';
 import { addOnCategories } from '../data/menuData';
 import { useMenu } from '../hooks/useMenu';
@@ -7,7 +7,6 @@ import { useCategories } from '../hooks/useCategories';
 import { useAuth } from '../contexts/AuthContext';
 import ImageUpload from './ImageUpload';
 import CategoryManager from './CategoryManager';
-import PaymentMethodManager from './PaymentMethodManager';
 import SiteSettingsManager from './SiteSettingsManager';
 import OrdersManager from './OrdersManager';
 import InventoryManager from './InventoryManager';
@@ -18,7 +17,7 @@ const AdminDashboard: React.FC = () => {
   const { user, signOut } = useAuth();
   const { menuItems, loading, addMenuItem, updateMenuItem, deleteMenuItem } = useMenu();
   const { categories } = useCategories();
-  const [currentView, setCurrentView] = useState<'dashboard' | 'items' | 'add' | 'edit' | 'categories' | 'payments' | 'settings' | 'orders' | 'inventory' | 'customers' | 'tables'>('dashboard');
+  const [currentView, setCurrentView] = useState<'dashboard' | 'items' | 'add' | 'edit' | 'categories' | 'settings' | 'orders' | 'inventory' | 'customers' | 'tables'>('dashboard');
   const [editingItem, setEditingItem] = useState<MenuItem | null>(null);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -919,11 +918,6 @@ const AdminDashboard: React.FC = () => {
     return <CategoryManager onBack={() => setCurrentView('dashboard')} />;
   }
 
-  // Payment Methods View
-  if (currentView === 'payments') {
-    return <PaymentMethodManager onBack={() => setCurrentView('dashboard')} />;
-  }
-
   // Site Settings View
   if (currentView === 'settings') {
     return (
@@ -1094,13 +1088,6 @@ const AdminDashboard: React.FC = () => {
               >
                 <FolderOpen className="h-5 w-5 text-gray-400" />
                 <span className="font-medium text-gray-900">Manage Categories</span>
-              </button>
-              <button
-                onClick={() => setCurrentView('payments')}
-                className="w-full flex items-center space-x-3 p-3 text-left hover:bg-gray-50 rounded-lg transition-colors duration-200"
-              >
-                <CreditCard className="h-5 w-5 text-gray-400" />
-                <span className="font-medium text-gray-900">Payment Methods</span>
               </button>
               <button
                 onClick={() => setCurrentView('orders')}
