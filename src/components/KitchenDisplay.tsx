@@ -115,7 +115,7 @@ const KitchenDisplay: React.FC<KitchenDisplayProps> = ({ onBack }) => {
                   <div className="flex justify-between items-start mb-2">
                     <div>
                       <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Order</span>
-                      <h3 className="text-lg font-black text-gray-900">#{order.id.slice(-6).toUpperCase()}</h3>
+                      <h3 className="text-lg font-black text-gray-900">#{order.id.slice(-8).toUpperCase()}</h3>
                     </div>
                     <div className={`flex items-center px-3 py-1 rounded-full border text-xs font-bold ${getUrgencyColor(order.created_at)}`}>
                       <Clock className="h-3 w-3 mr-1" />
