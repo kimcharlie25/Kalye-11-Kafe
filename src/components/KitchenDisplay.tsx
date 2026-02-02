@@ -144,7 +144,7 @@ const KitchenDisplay: React.FC<KitchenDisplayProps> = ({ onBack }) => {
                       <div key={idx} className="flex flex-col pb-3 border-b border-gray-100 last:border-0 last:pb-0">
                         <div className="flex justify-between items-start">
                           <div className="flex items-start">
-                            <span className="inline-flex items-center justify-center h-6 w-6 rounded bg-gray-900 text-white font-bold text-xs mr-3 mt-0.5">
+                            <span className="inline-flex items-center justify-center h-6 w-6 rounded bg-gray-900 text-white font-bold text-lg mr-3 mt-0.5">
                               {item.quantity}
                             </span>
                             <div>
