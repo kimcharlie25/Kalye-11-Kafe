@@ -11,19 +11,24 @@ interface CheckoutProps {
 }
 
 const Checkout: React.FC<CheckoutProps> = ({ cartItems, totalPrice, onBack }) => {
-  const { createOrder, creating, error } = useOrders();
+  const { createOrder, error } = useOrders();
   const { tableNumber } = useTable();
   const [customerName, setCustomerName] = useState('');
   const [notes, setNotes] = useState('');
   const [uiNotice, setUiNotice] = useState<string | null>(null);
   // Order confirmation modal state
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  // Local submitting state to prevent double-click race condition
+  const [submitting, setSubmitting] = useState(false);
 
 
   const handleConfirmOrder = async () => {
+    // Prevent double-click: if already submitting, do nothing
+    if (submitting) return;
+    setSubmitting(true);
     // Persist order to database
     try {
-      const order = await createOrder({
+      await createOrder({
         customerName,
         contactNumber: '', // Empty contact number
         serviceType: 'dine-in', // Set to dine-in as requested
@@ -37,6 +42,7 @@ const Checkout: React.FC<CheckoutProps> = ({ cartItems, totalPrice, onBack }) =>
       // Show confirmation modal
       setShowConfirmationModal(true);
     } catch (e) {
+      setSubmitting(false); // Reset on error to allow retry
       const raw = e instanceof Error ? e.message : '';
       if (/insufficient stock/i.test(raw)) {
         setUiNotice(raw);
@@ -151,13 +157,13 @@ const Checkout: React.FC<CheckoutProps> = ({ cartItems, totalPrice, onBack }) =>
 
             <button
               onClick={handleConfirmOrder}
-              disabled={!isDetailsValid || creating}
-              className={`w-full py-4 rounded-lg font-sans font-medium text-lg transition-all duration-200 transform ${!isDetailsValid || creating
-                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  : 'bg-black text-white hover:bg-gray-800 hover:scale-[1.02]'
+              disabled={!isDetailsValid || submitting}
+              className={`w-full py-4 rounded-lg font-sans font-medium text-lg transition-all duration-200 transform ${!isDetailsValid || submitting
+                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                : 'bg-black text-white hover:bg-gray-800 hover:scale-[1.02]'
                 }`}
             >
-              {creating ? (
+              {submitting ? (
                 <span className="flex items-center justify-center space-x-2">
                   <Loader2 className="h-5 w-5 animate-spin" />
                   <span>Confirming Order...</span>
