@@ -126,7 +126,11 @@ const KitchenDisplay: React.FC<KitchenDisplayProps> = ({ onBack }) => {
                   <div className="flex items-center justify-between">
                     <div className="flex flex-col">
                       <span className="text-xs text-gray-500">Customer</span>
-                      <span className="font-bold text-gray-900">{order.customer_name}</span>
+                      <span className="font-bold text-gray-900 leading-tight">{order.customer_name}</span>
+                      <span className={`text-[10px] font-black uppercase tracking-widest mt-1 px-2 py-0.5 rounded-md inline-block w-fit ${order.service_type === 'dine-in' ? 'bg-black text-white' : 'bg-gray-200 text-black'
+                        }`}>
+                        {order.service_type === 'pickup' ? 'Takeout' : order.service_type.replace('-', ' ')}
+                      </span>
                     </div>
                     {order.table_number && (
                       <div className="bg-black text-white px-3 py-1 rounded-lg text-center">

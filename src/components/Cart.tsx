@@ -26,11 +26,11 @@ const Cart: React.FC<CartProps> = ({
       <div className="max-w-4xl mx-auto px-4 py-12">
         <div className="text-center py-16">
           <div className="text-6xl mb-4">☕</div>
-          <h2 className="text-2xl font-sans font-bold text-[#FF0000] mb-2">Your cart is empty</h2>
-          <p className="text-gray-600 mb-6 font-sans">Add some delicious items to get started!</p>
+          <h2 className="text-3xl font-sans font-black text-black mb-2 uppercase tracking-tighter">Your cart is empty</h2>
+          <p className="text-gray-400 mb-8 font-sans uppercase text-xs tracking-widest font-bold">Add some delicious items to get started!</p>
           <button
             onClick={onContinueShopping}
-            className="bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-all duration-200 font-sans font-medium"
+            className="bg-black text-white px-8 py-4 rounded-none hover:bg-white hover:text-black border-2 border-black transition-all duration-300 font-sans font-black uppercase tracking-widest"
           >
             Browse Menu
           </button>
@@ -51,12 +51,12 @@ const Cart: React.FC<CartProps> = ({
           <span className="hidden sm:inline">Continue Shopping</span>
           <span className="sm:hidden">Back</span>
         </button>
-        
+
         <div className="flex items-center justify-between sm:justify-center flex-1">
-          <h1 className="text-2xl sm:text-3xl font-sans font-bold text-[#FF0000]">Your Cart</h1>
+          <h1 className="text-3xl sm:text-5xl font-sans font-black text-black uppercase tracking-tighter">Your Cart</h1>
           <button
             onClick={clearCart}
-            className="text-[#FF0000] hover:opacity-80 transition-opacity duration-200 text-sm sm:text-base font-sans font-medium"
+            className="text-gray-400 hover:text-black transition-all duration-200 text-xs sm:text-sm font-sans font-bold uppercase tracking-widest"
           >
             Clear All
           </button>
@@ -76,8 +76,8 @@ const Cart: React.FC<CartProps> = ({
                   )}
                   {item.selectedAddOns && item.selectedAddOns.length > 0 && (
                     <p className="text-xs text-gray-500 mb-1">
-                      Add-ons: {item.selectedAddOns.map(addOn => 
-                        addOn.quantity && addOn.quantity > 1 
+                      Add-ons: {item.selectedAddOns.map(addOn =>
+                        addOn.quantity && addOn.quantity > 1
                           ? `${addOn.name} x${addOn.quantity}`
                           : addOn.name
                       ).join(', ')}
@@ -91,24 +91,24 @@ const Cart: React.FC<CartProps> = ({
                   <Trash2 className="h-4 w-4" />
                 </button>
               </div>
-              
+
               <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2 border-2 border-black rounded-lg">
+                <div className="flex items-center space-x-2 border-2 border-black p-1">
                   <button
                     onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                    className="p-2 bg-black text-white hover:bg-gray-800 rounded-l-lg transition-colors duration-200"
+                    className="p-2 bg-black text-white hover:bg-gray-800 transition-colors duration-200"
                   >
                     <Minus className="h-3 w-3" />
                   </button>
-                  <span className="font-semibold text-black min-w-[32px] text-center text-sm px-2">{item.quantity}</span>
+                  <span className="font-black text-black min-w-[32px] text-center text-sm px-2">{item.quantity}</span>
                   <button
                     onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                    className="p-2 bg-black text-white hover:bg-gray-800 rounded-r-lg transition-colors duration-200"
+                    className="p-2 bg-black text-white hover:bg-gray-800 transition-colors duration-200"
                   >
                     <Plus className="h-3 w-3" />
                   </button>
                 </div>
-                
+
                 <div className="text-right">
                   <p className="text-sm text-gray-500">₱{item.totalPrice} each</p>
                   <p className="text-lg font-semibold text-black">₱{item.totalPrice * item.quantity}</p>
@@ -125,8 +125,8 @@ const Cart: React.FC<CartProps> = ({
                 )}
                 {item.selectedAddOns && item.selectedAddOns.length > 0 && (
                   <p className="text-sm text-gray-500 mb-1">
-                    Add-ons: {item.selectedAddOns.map(addOn => 
-                      addOn.quantity && addOn.quantity > 1 
+                    Add-ons: {item.selectedAddOns.map(addOn =>
+                      addOn.quantity && addOn.quantity > 1
                         ? `${addOn.name} x${addOn.quantity}`
                         : addOn.name
                     ).join(', ')}
@@ -134,28 +134,28 @@ const Cart: React.FC<CartProps> = ({
                 )}
                 <p className="text-lg font-semibold text-black">₱{item.totalPrice} each</p>
               </div>
-              
+
               <div className="flex items-center space-x-4 ml-4">
-                <div className="flex items-center space-x-0 border-2 border-black rounded-lg">
+                <div className="flex items-center space-x-0 border-2 border-black p-1">
                   <button
                     onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                    className="p-2 bg-black text-white hover:bg-gray-800 rounded-l-lg transition-colors duration-200"
+                    className="p-2 bg-black text-white hover:bg-gray-800 transition-colors duration-200"
                   >
                     <Minus className="h-4 w-4" />
                   </button>
-                  <span className="font-semibold text-black min-w-[40px] text-center px-3">{item.quantity}</span>
+                  <span className="font-black text-black min-w-[40px] text-center px-3">{item.quantity}</span>
                   <button
                     onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                    className="p-2 bg-black text-white hover:bg-gray-800 rounded-r-lg transition-colors duration-200"
+                    className="p-2 bg-black text-white hover:bg-gray-800 transition-colors duration-200"
                   >
                     <Plus className="h-4 w-4" />
                   </button>
                 </div>
-                
+
                 <div className="text-right">
                   <p className="text-lg font-semibold text-black">₱{item.totalPrice * item.quantity}</p>
                 </div>
-                
+
                 <button
                   onClick={() => removeFromCart(item.id)}
                   className="p-2 text-red-500 hover:text-red-600 hover:bg-red-50 rounded-full transition-all duration-200"
@@ -168,15 +168,15 @@ const Cart: React.FC<CartProps> = ({
         ))}
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm p-6">
-        <div className="flex items-center justify-between text-2xl font-sans font-bold text-[#FF0000] mb-6">
+      <div className="bg-white border-2 border-black p-6">
+        <div className="flex items-center justify-between text-3xl font-sans font-black text-black mb-8 uppercase tracking-tighter">
           <span>Total:</span>
           <span>₱{(getTotalPrice() || 0).toFixed(2)}</span>
         </div>
-        
+
         <button
           onClick={onCheckout}
-          className="w-full bg-black text-white py-4 rounded-lg hover:bg-gray-800 transition-all duration-200 transform hover:scale-[1.02] font-sans font-medium text-lg"
+          className="w-full bg-black text-white py-5 rounded-none hover:bg-white hover:text-black border-2 border-black transition-all duration-300 transform font-sans font-black text-xl uppercase tracking-widest"
         >
           Proceed to Checkout
         </button>

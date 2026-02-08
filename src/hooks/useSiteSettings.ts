@@ -61,18 +61,22 @@ export const useSiteSettings = () => {
     try {
       setError(null);
 
+      // Use upsert to handle both insert and update cases
       const updatePromises = Object.entries(updates).map(([key, value]) =>
         supabase
           .from('site_settings')
-          .update({ value })
-          .eq('id', key)
+          .upsert(
+            { id: key, value, type: 'text' },
+            { onConflict: 'id' }
+          )
       );
 
       const results = await Promise.all(updatePromises);
-      
+
       // Check for errors
       const errors = results.filter(result => result.error);
       if (errors.length > 0) {
+        console.error('Update errors:', errors.map(e => e.error));
         throw new Error('Some updates failed');
       }
 

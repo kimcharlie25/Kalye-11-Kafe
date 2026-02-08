@@ -9,45 +9,25 @@
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
 }
 
-/* ClickEats Custom Styles */
-.bg-cream-50 {
-  background-color: #fefce8;
+/* Grayscale Custom Styles */
+.bg-contrast-black {
+  background-color: #000000;
 }
 
-.bg-cream-100 {
-  background-color: #fef3c7;
+.bg-contrast-white {
+  background-color: #ffffff;
 }
 
-.bg-cream-200 {
-  background-color: #fde68a;
+.text-contrast-white {
+  color: #ffffff;
 }
 
-.border-cream-200 {
-  border-color: #fde68a;
+.text-contrast-black {
+  color: #000000;
 }
 
-.border-cream-300 {
-  border-color: #fcd34d;
-}
-
-.hover\:bg-cream-50:hover {
-  background-color: #fefce8;
-}
-
-.hover\:bg-cream-100:hover {
-  background-color: #fef3c7;
-}
-
-.hover\:bg-cream-200:hover {
-  background-color: #fde68a;
-}
-
-.hover\:border-cream-400:hover {
-  border-color: #fbbf24;
-}
-
-.focus\:ring-cream-500:focus {
-  --tw-ring-color: #f59e0b;
+.border-contrast-black {
+  border-color: #000000;
 }
 
 /* Hide scrollbar for mobile nav */

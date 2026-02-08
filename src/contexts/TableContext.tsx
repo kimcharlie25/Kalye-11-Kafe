@@ -2,8 +2,11 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 
 interface TableContextType {
   tableNumber: string | null;
+  serviceType: 'dine-in' | 'takeout' | null;
   setTableNumber: (table: string | null) => void;
+  setServiceType: (type: 'dine-in' | 'takeout' | null) => void;
   clearTableNumber: () => void;
+  resetSelection: () => void;
 }
 
 const TableContext = createContext<TableContextType | undefined>(undefined);
@@ -22,16 +25,17 @@ interface TableProviderProps {
 
 export const TableProvider: React.FC<TableProviderProps> = ({ children }) => {
   const [tableNumber, setTableNumberState] = useState<string | null>(null);
+  const [serviceType, setServiceTypeState] = useState<'dine-in' | 'takeout' | null>(null);
 
-  // Load table number from localStorage on mount
+  // Load from localStorage on mount
   useEffect(() => {
-    const stored = localStorage.getItem('tableNumber');
-    if (stored) {
-      setTableNumberState(stored);
+    const storedTable = localStorage.getItem('tableNumber');
+    if (storedTable) {
+      setTableNumberState(storedTable);
     }
   }, []);
 
-  // Save to localStorage whenever table number changes
+  // Save to localStorage whenever values change
   useEffect(() => {
     if (tableNumber !== null) {
       localStorage.setItem('tableNumber', tableNumber.toString());
@@ -44,15 +48,28 @@ export const TableProvider: React.FC<TableProviderProps> = ({ children }) => {
     setTableNumberState(table);
   };
 
+  const setServiceType = (type: 'dine-in' | 'takeout' | null) => {
+    setServiceTypeState(type);
+  };
+
   const clearTableNumber = () => {
     setTableNumberState(null);
     localStorage.removeItem('tableNumber');
   };
 
+  const resetSelection = () => {
+    setTableNumberState(null);
+    setServiceTypeState(null);
+    localStorage.removeItem('tableNumber');
+  };
+
   const value = {
     tableNumber,
+    serviceType,
     setTableNumber,
+    setServiceType,
     clearTableNumber,
+    resetSelection,
   };
 
   return (

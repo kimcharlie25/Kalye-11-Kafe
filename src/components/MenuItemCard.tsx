@@ -10,12 +10,12 @@ interface MenuItemCardProps {
   onUpdateQuantity: (id: string, quantity: number) => void;
 }
 
-const MenuItemCard: React.FC<MenuItemCardProps> = ({ 
-  item, 
-  onAddToCart, 
-  quantity, 
+const MenuItemCard: React.FC<MenuItemCardProps> = ({
+  item,
+  onAddToCart,
+  quantity,
   cartItemId,
-  onUpdateQuantity 
+  onUpdateQuantity
 }) => {
   const [showCustomization, setShowCustomization] = useState(false);
   const [selectedVariation, setSelectedVariation] = useState<Variation | undefined>(
@@ -54,7 +54,7 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
 
   const handleCustomizedAddToCart = () => {
     // Convert selectedAddOns back to regular AddOn array for cart
-    const addOnsForCart: AddOn[] = selectedAddOns.flatMap(addOn => 
+    const addOnsForCart: AddOn[] = selectedAddOns.flatMap(addOn =>
       Array(addOn.quantity).fill({ ...addOn, quantity: undefined })
     );
     onAddToCart(item, 1, selectedVariation, addOnsForCart);
@@ -76,12 +76,12 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
   const updateAddOnQuantity = (addOn: AddOn, quantity: number) => {
     setSelectedAddOns(prev => {
       const existingIndex = prev.findIndex(a => a.id === addOn.id);
-      
+
       if (quantity === 0) {
         // Remove add-on if quantity is 0
         return prev.filter(a => a.id !== addOn.id);
       }
-      
+
       if (existingIndex >= 0) {
         // Update existing add-on quantity
         const updated = [...prev];
@@ -124,35 +124,35 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
           <div className={`absolute inset-0 flex items-center justify-center ${item.image ? 'hidden' : ''}`}>
             <div className="text-6xl opacity-20 text-gray-400">☕</div>
           </div>
-          
+
           {/* Badges */}
           <div className="absolute top-3 left-3 flex flex-col gap-2">
             {item.isOnDiscount && item.discountPrice && (
-              <div className="bg-gradient-to-r from-red-500 to-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg animate-pulse">
+              <div className="bg-black text-white text-[10px] font-black px-3 py-1.5 rounded-none shadow-lg tracking-widest uppercase">
                 SALE
               </div>
             )}
             {item.popular && (
-              <div className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">
-                ⭐ POPULAR
+              <div className="bg-white text-black text-[10px] font-black px-3 py-1.5 rounded-none shadow-lg border border-black tracking-widest uppercase">
+                POPULAR
               </div>
             )}
           </div>
-          
+
           {!item.available && (
-            <div className="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">
+            <div className="absolute top-3 right-3 bg-gray-400 text-white text-[10px] font-black px-3 py-1.5 rounded-none shadow-lg tracking-widest uppercase">
               UNAVAILABLE
             </div>
           )}
-          
+
           {/* Discount Percentage Badge */}
           {showDiscount && discountedPrice !== undefined && (
-            <div className="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm text-red-600 text-xs font-bold px-2 py-1 rounded-full shadow-lg">
+            <div className="absolute bottom-3 right-3 bg-black text-white text-[10px] font-black px-2 py-1 rounded-none shadow-lg border border-white tracking-widest">
               {Math.round(((basePrice - discountedPrice) / basePrice) * 100)}% OFF
             </div>
           )}
         </div>
-        
+
         {/* Content */}
         <div className="p-5">
           <div className="flex items-start justify-between mb-3">
@@ -163,41 +163,41 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
               </div>
             )}
           </div>
-          
+
           <p className={`text-sm mb-4 leading-relaxed ${!item.available ? 'text-gray-400' : 'text-gray-600'}`}>
             {!item.available ? 'Currently Unavailable' : item.description}
           </p>
-          
+
           {/* Pricing Section */}
           <div className="flex items-center justify-between mb-4">
             <div className="flex-1">
               {showDiscount && discountedPrice !== undefined ? (
                 <div className="space-y-1">
                   <div className="flex items-center space-x-2">
-                    <span className="text-2xl font-bold text-red-600">
+                    <span className="text-2xl font-black text-black">
                       ₱{discountedPrice.toFixed(2)}
                     </span>
-                    <span className="text-sm text-gray-500 line-through">
+                    <span className="text-sm text-gray-400 line-through">
                       ₱{basePrice.toFixed(2)}
                     </span>
                   </div>
-                  <div className="text-xs text-gray-500">
+                  <div className="text-[10px] text-gray-400 uppercase font-bold tracking-widest">
                     Save ₱{(basePrice - discountedPrice).toFixed(2)}
                   </div>
                 </div>
               ) : (
-                <div className="text-2xl font-bold text-gray-900">
+                <div className="text-2xl font-black text-black">
                   ₱{basePrice.toFixed(2)}
                 </div>
               )}
-              
+
               {item.variations && item.variations.length > 0 && (
                 <div className="text-xs text-gray-500 mt-1">
                   Starting price
                 </div>
               )}
             </div>
-            
+
             {/* Action Buttons */}
             <div className="flex-shrink-0">
               {!item.available ? (
@@ -215,19 +215,19 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
                   {item.variations?.length || item.addOns?.length ? 'Customize' : 'Add to Cart'}
                 </button>
               ) : (
-                <div className="flex items-center space-x-2 bg-gradient-to-r from-yellow-100 to-orange-100 rounded-xl p-1 border border-yellow-200">
+                <div className="flex items-center space-x-2 bg-black rounded-none p-1 border border-black">
                   <button
                     onClick={handleDecrement}
-                    className="p-2 hover:bg-yellow-200 rounded-lg transition-colors duration-200 hover:scale-110"
+                    className="p-2 hover:bg-gray-800 rounded-none transition-colors duration-200"
                   >
-                    <Minus className="h-4 w-4 text-gray-700" />
+                    <Minus className="h-4 w-4 text-white" />
                   </button>
-                  <span className="font-bold text-gray-900 min-w-[28px] text-center text-sm">{quantity}</span>
+                  <span className="font-black text-white min-w-[28px] text-center text-sm">{quantity}</span>
                   <button
                     onClick={handleIncrement}
-                    className="p-2 hover:bg-yellow-200 rounded-lg transition-colors duration-200 hover:scale-110"
+                    className="p-2 hover:bg-gray-800 rounded-none transition-colors duration-200"
                   >
-                    <Plus className="h-4 w-4 text-gray-700" />
+                    <Plus className="h-4 w-4 text-white" />
                   </button>
                 </div>
               )}
@@ -235,22 +235,22 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
           </div>
 
           {/* Stock indicator */}
-          {item.trackInventory && item.stockQuantity !== null && (
+          {item.trackInventory && item.stockQuantity !== null && item.stockQuantity !== undefined && (
             <div className="mt-3">
-              {item.stockQuantity > item.lowStockThreshold ? (
-                <div className="flex items-center space-x-2 text-xs text-green-700 bg-green-50 px-3 py-2 rounded-lg border border-green-200">
+              {item.stockQuantity > (item.lowStockThreshold ?? 0) ? (
+                <div className="flex items-center space-x-2 text-xs text-black border border-black px-3 py-2 rounded-none font-bold">
                   <span className="font-semibold">✓</span>
-                  <span className="font-medium">{item.stockQuantity} in stock</span>
+                  <span className="uppercase tracking-widest">{item.stockQuantity} in stock</span>
                 </div>
               ) : item.stockQuantity > 0 ? (
-                <div className="flex items-center space-x-2 text-xs text-orange-700 bg-orange-50 px-3 py-2 rounded-lg border border-orange-200 animate-pulse">
+                <div className="flex items-center space-x-2 text-xs text-white bg-black px-3 py-2 rounded-none border border-black animate-pulse font-bold">
                   <span className="font-semibold">⚠️</span>
-                  <span className="font-medium">Only {item.stockQuantity} left!</span>
+                  <span className="uppercase tracking-widest">Only {item.stockQuantity} left!</span>
                 </div>
               ) : (
-                <div className="flex items-center space-x-2 text-xs text-red-700 bg-red-50 px-3 py-2 rounded-lg border border-red-200">
+                <div className="flex items-center space-x-2 text-xs text-gray-400 border border-gray-400 px-3 py-2 rounded-none font-bold">
                   <span className="font-semibold">✕</span>
-                  <span className="font-medium">Out of stock</span>
+                  <span className="uppercase tracking-widest">Out of stock</span>
                 </div>
               )}
             </div>
@@ -285,20 +285,20 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
 
             <div className="p-6">
               {/* Stock indicator in modal */}
-              {item.trackInventory && item.stockQuantity !== null && (
+              {item.trackInventory && item.stockQuantity !== null && item.stockQuantity !== undefined && (
                 <div className="mb-6">
-                  {item.stockQuantity > item.lowStockThreshold ? (
-                    <div className="flex items-center space-x-2 text-sm text-green-700 bg-green-50 px-4 py-3 rounded-lg border border-green-200">
+                  {item.stockQuantity > (item.lowStockThreshold ?? 0) ? (
+                    <div className="flex items-center space-x-2 text-sm text-black border-2 border-black px-4 py-3 rounded-none font-bold">
                       <span className="font-semibold">✓</span>
-                      <span className="font-medium">{item.stockQuantity} available in stock</span>
+                      <span className="uppercase tracking-widest">{item.stockQuantity} available in stock</span>
                     </div>
                   ) : item.stockQuantity > 0 ? (
-                    <div className="flex items-center space-x-2 text-sm text-orange-700 bg-orange-50 px-4 py-3 rounded-lg border border-orange-200">
+                    <div className="flex items-center space-x-2 text-sm text-white bg-black px-4 py-3 rounded-none border-2 border-black font-bold uppercase tracking-widest">
                       <span className="font-semibold">⚠️</span>
                       <span className="font-medium">Hurry! Only {item.stockQuantity} left in stock</span>
                     </div>
                   ) : (
-                    <div className="flex items-center space-x-2 text-sm text-red-700 bg-red-50 px-4 py-3 rounded-lg border border-red-200">
+                    <div className="flex items-center space-x-2 text-sm text-gray-400 border-2 border-gray-400 px-4 py-3 rounded-none font-bold uppercase tracking-widest">
                       <span className="font-semibold">✕</span>
                       <span className="font-medium">Currently out of stock</span>
                     </div>
@@ -314,11 +314,10 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
                     {item.variations.map((variation) => (
                       <label
                         key={variation.id}
-                        className={`flex items-center justify-between p-4 border-2 rounded-xl cursor-pointer transition-all duration-200 ${
-                          selectedVariation?.id === variation.id
-                            ? 'border-red-500 bg-red-50'
-                            : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
-                        }`}
+                        className={`flex items-center justify-between p-4 border-2 transition-all duration-200 ${selectedVariation?.id === variation.id
+                          ? 'border-black bg-black text-white'
+                          : 'border-gray-200 hover:border-black hover:bg-gray-50 text-black'
+                          }`}
                       >
                         <div className="flex items-center space-x-3">
                           <input
@@ -326,11 +325,11 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
                             name="variation"
                             checked={selectedVariation?.id === variation.id}
                             onChange={() => setSelectedVariation(variation)}
-                            className="text-red-600 focus:ring-red-500"
+                            className="text-black focus:ring-black h-4 w-4"
                           />
-                          <span className="font-medium text-gray-900">{variation.name}</span>
+                          <span className="font-bold uppercase text-xs tracking-widest">{variation.name}</span>
                         </div>
-                        <span className="text-gray-900 font-semibold">
+                        <span className="font-black">
                           ₱{variation.price.toFixed(2)}
                         </span>
                       </label>
@@ -360,21 +359,21 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
                                 {addOn.price > 0 ? `₱${addOn.price.toFixed(2)} each` : 'Free'}
                               </div>
                             </div>
-                            
+
                             <div className="flex items-center space-x-2">
                               {selectedAddOns.find(a => a.id === addOn.id) ? (
-                                <div className="flex items-center space-x-2 bg-red-100 rounded-xl p-1 border border-red-200">
+                                <div className="flex items-center space-x-2 bg-black rounded-none p-1 border border-black">
                                   <button
                                     type="button"
                                     onClick={() => {
                                       const current = selectedAddOns.find(a => a.id === addOn.id);
                                       updateAddOnQuantity(addOn, (current?.quantity || 1) - 1);
                                     }}
-                                    className="p-1.5 hover:bg-red-200 rounded-lg transition-colors duration-200"
+                                    className="p-1.5 hover:bg-gray-800 rounded-none transition-colors duration-200"
                                   >
-                                    <Minus className="h-3 w-3 text-red-600" />
+                                    <Minus className="h-3 w-3 text-white" />
                                   </button>
-                                  <span className="font-semibold text-gray-900 min-w-[24px] text-center text-sm">
+                                  <span className="font-black text-white min-w-[24px] text-center text-xs">
                                     {selectedAddOns.find(a => a.id === addOn.id)?.quantity || 0}
                                   </span>
                                   <button
@@ -383,9 +382,9 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
                                       const current = selectedAddOns.find(a => a.id === addOn.id);
                                       updateAddOnQuantity(addOn, (current?.quantity || 0) + 1);
                                     }}
-                                    className="p-1.5 hover:bg-red-200 rounded-lg transition-colors duration-200"
+                                    className="p-1.5 hover:bg-gray-800 rounded-none transition-colors duration-200"
                                   >
-                                    <Plus className="h-3 w-3 text-red-600" />
+                                    <Plus className="h-3 w-3 text-white" />
                                   </button>
                                 </div>
                               ) : (
@@ -408,10 +407,10 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
               )}
 
               {/* Price Summary */}
-              <div className="border-t border-gray-200 pt-4 mb-6">
-                <div className="flex items-center justify-between text-2xl font-bold text-gray-900">
+              <div className="border-t-2 border-black pt-4 mb-6">
+                <div className="flex items-center justify-between text-2xl font-black text-black uppercase tracking-tighter">
                   <span>Total:</span>
-                  <span className="text-red-600">₱{calculatePrice().toFixed(2)}</span>
+                  <span>₱{calculatePrice().toFixed(2)}</span>
                 </div>
               </div>
 

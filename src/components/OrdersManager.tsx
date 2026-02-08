@@ -103,8 +103,13 @@ const OrdersManager: React.FC<OrdersManagerProps> = ({ onBack }) => {
     }).replace(/,/g, ''); // Remove commas for CSV compatibility
   };
 
-  const formatServiceType = (serviceType: string) => {
-    return serviceType.charAt(0).toUpperCase() + serviceType.slice(1).replace('-', ' ');
+  const formatServiceType = (type: string) => {
+    switch (type.toLowerCase()) {
+      case 'dine-in': return 'Dine-In';
+      case 'pickup': return 'Takeout';
+      case 'delivery': return 'Delivery';
+      default: return type.charAt(0).toUpperCase() + type.slice(1).replace('-', ' ');
+    }
   };
 
   const filtered = useMemo(() => {
@@ -359,7 +364,7 @@ const OrdersManager: React.FC<OrdersManagerProps> = ({ onBack }) => {
 </head>
 <body>
   <div class="header">
-    <h1>K Inasal</h1>
+    <h1>Kalye 11 Kafe</h1>
     <p>Order Receipt</p>
   </div>
 
@@ -379,7 +384,7 @@ const OrdersManager: React.FC<OrdersManagerProps> = ({ onBack }) => {
     </div>
     <div class="row">
       <span class="row-label">Service:</span>
-      <span>Dine-in</span>
+      <span>${formatServiceType(order.service_type)}</span>
     </div>
     ${tableNumber ? `
     <div class="row">

@@ -5,6 +5,7 @@ import Header from './components/Header';
 import Menu from './components/Menu';
 import Cart from './components/Cart';
 import Checkout from './components/Checkout';
+import LandingPage from './components/LandingPage';
 import AdminDashboard from './components/AdminDashboard';
 import AdminLogin from './components/AdminLogin';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -15,10 +16,19 @@ import { TableProvider, useTable } from './contexts/TableContext';
 function MainAppContent() {
   const cart = useCart();
   const { menuItems } = useMenu();
-  const { setTableNumber } = useTable();
+  const { setTableNumber, serviceType, resetSelection } = useTable();
   const [searchParams] = useSearchParams();
-  const [currentView, setCurrentView] = React.useState<'menu' | 'cart' | 'checkout'>('menu');
+  const [currentView, setCurrentView] = React.useState<'landing' | 'menu' | 'cart' | 'checkout'>('landing');
   const [selectedCategory, setSelectedCategory] = React.useState<string>('all');
+
+  // Initial view logic: if serviceType is already selected, go to menu
+  React.useEffect(() => {
+    if (serviceType) {
+      setCurrentView('menu');
+    } else {
+      setCurrentView('landing');
+    }
+  }, [serviceType]);
 
   // Read table number from URL params
   React.useEffect(() => {
@@ -28,7 +38,7 @@ function MainAppContent() {
     }
   }, [searchParams, setTableNumber]);
 
-  const handleViewChange = (view: 'menu' | 'cart' | 'checkout') => {
+  const handleViewChange = (view: 'landing' | 'menu' | 'cart' | 'checkout') => {
     setCurrentView(view);
   };
 
@@ -40,6 +50,10 @@ function MainAppContent() {
   const filteredMenuItems = selectedCategory === 'all'
     ? menuItems
     : menuItems.filter(item => item.category === selectedCategory);
+
+  if (currentView === 'landing') {
+    return <LandingPage onContinue={() => handleViewChange('menu')} />;
+  }
 
   return (
     <div className="min-h-screen bg-white font-sans">
@@ -78,6 +92,16 @@ function MainAppContent() {
           totalPrice={cart.getTotalPrice()}
           onBack={() => handleViewChange('cart')}
         />
+      )}
+
+      {/* Hidden button for testing/resetting state if needed during dev */}
+      {process.env.NODE_ENV === 'development' && (
+        <button
+          onClick={resetSelection}
+          className="fixed bottom-4 right-4 text-[8px] text-gray-300 uppercase hover:text-black"
+        >
+          Reset Selection
+        </button>
       )}
     </div>
   );

@@ -253,7 +253,7 @@ const AdminDashboard: React.FC = () => {
   const availableItems = menuItems.filter(item => item.available).length;
   const categoryCounts = categories.map(cat => ({
     ...cat,
-    count: menuItems.filter(item => item.category === cat.id).length
+    count: menuItems.filter(item => item.category === cat.name).length
   }));
 
   const handleLogout = async () => {
@@ -760,7 +760,7 @@ const AdminDashboard: React.FC = () => {
                         </div>
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-500">
-                        {categories.find(cat => cat.id === item.category)?.name}
+                        {item.category}
                       </td>
                       <td className="px-6 py-4 text-sm font-medium text-gray-900">
                         <div className="flex flex-col">
@@ -788,8 +788,8 @@ const AdminDashboard: React.FC = () => {
                             </span>
                           )}
                           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${item.available
-                              ? 'bg-green-100 text-green-800'
-                              : 'bg-red-100 text-red-800'
+                            ? 'bg-green-100 text-green-800'
+                            : 'bg-red-100 text-red-800'
                             }`}>
                             {item.available ? 'Available' : 'Unavailable'}
                           </span>
@@ -862,7 +862,7 @@ const AdminDashboard: React.FC = () => {
                     <div>
                       <span className="text-gray-500">Category:</span>
                       <span className="ml-1 text-gray-900">
-                        {categories.find(cat => cat.id === item.category)?.name}
+                        {item.category}
                       </span>
                     </div>
                     <div>
@@ -896,8 +896,8 @@ const AdminDashboard: React.FC = () => {
                         </span>
                       )}
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${item.available
-                          ? 'bg-green-100 text-green-800'
-                          : 'bg-red-100 text-red-800'
+                        ? 'bg-green-100 text-green-800'
+                        : 'bg-red-100 text-red-800'
                         }`}>
                         {item.available ? 'Available' : 'Unavailable'}
                       </span>
@@ -984,7 +984,7 @@ const AdminDashboard: React.FC = () => {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
               <Coffee className="h-8 w-8 text-black" />
-              <h1 className="text-2xl font-noto font-semibold text-black">K Inasal Admin</h1>
+              <h1 className="text-2xl font-noto font-semibold text-black">Kalye 11 Kafe Admin</h1>
             </div>
             <div className="flex items-center space-x-4">
               <a
