@@ -58,8 +58,8 @@ const Header: React.FC<HeaderProps> = ({ cartItemsCount, onCartClick, onMenuClic
                 <button
                   onClick={() => onCategoryClick?.('all')}
                   className={`transition-all duration-200 font-sans uppercase text-xs tracking-widest ${selectedCategory === 'all' || !selectedCategory
-                      ? 'text-black font-bold border-b-2 border-black'
-                      : 'text-gray-400 hover:text-black'
+                    ? 'text-black font-bold border-b-2 border-black'
+                    : 'text-gray-400 hover:text-black'
                     }`}
                 >
                   All
@@ -69,8 +69,8 @@ const Header: React.FC<HeaderProps> = ({ cartItemsCount, onCartClick, onMenuClic
                     key={category.id}
                     onClick={() => onCategoryClick?.(category.id)}
                     className={`flex items-center space-x-1 transition-all duration-200 font-sans uppercase text-xs tracking-widest ${selectedCategory === category.id
-                        ? 'text-black font-bold border-b-2 border-black'
-                        : 'text-gray-400 hover:text-black'
+                      ? 'text-black font-bold border-b-2 border-black'
+                      : 'text-gray-400 hover:text-black'
                       }`}
                   >
                     <span>{category.icon}</span>
@@ -84,7 +84,7 @@ const Header: React.FC<HeaderProps> = ({ cartItemsCount, onCartClick, onMenuClic
           <div className="flex items-center space-x-2">
             {tableNumber && (
               <div className="px-3 py-2 bg-black text-white rounded-lg text-sm font-semibold font-sans">
-                Table #{tableNumber}
+                {tableNumber}
               </div>
             )}
             <button
