@@ -305,6 +305,103 @@ CREATE POLICY "Authenticated users can manage tables"
 CREATE INDEX IF NOT EXISTS idx_tables_qr_url ON tables(qr_url);
 
 -- =============================================================================
+-- MATERIALS TABLE (INVENTORY ITEMS)
+-- =============================================================================
+
+CREATE TABLE IF NOT EXISTS materials (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  name text NOT NULL,
+  category text DEFAULT '',
+  unit text NOT NULL DEFAULT 'pc',
+  unit_cost numeric(12,2) NOT NULL DEFAULT 0,
+  stock_quantity integer NOT NULL DEFAULT 0,
+  low_stock_threshold integer NOT NULL DEFAULT 5,
+  created_at timestamptz DEFAULT now(),
+  updated_at timestamptz DEFAULT now()
+);
+
+ALTER TABLE materials ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Anyone can read materials"
+  ON materials FOR SELECT TO public USING (true);
+
+CREATE POLICY "Authenticated users can manage materials"
+  ON materials FOR ALL TO authenticated USING (true) WITH CHECK (true);
+
+CREATE TRIGGER update_materials_updated_at
+  BEFORE UPDATE ON materials
+  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- =============================================================================
+-- SUPPLIERS TABLE
+-- =============================================================================
+
+CREATE TABLE IF NOT EXISTS suppliers (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  item_name text NOT NULL,
+  category text NOT NULL DEFAULT '',
+  supplier_name text NOT NULL,
+  contact text NOT NULL DEFAULT '',
+  created_at timestamptz DEFAULT now(),
+  updated_at timestamptz DEFAULT now()
+);
+
+ALTER TABLE suppliers ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Anyone can read suppliers"
+  ON suppliers FOR SELECT TO public USING (true);
+
+CREATE POLICY "Authenticated users can manage suppliers"
+  ON suppliers FOR ALL TO authenticated USING (true) WITH CHECK (true);
+
+CREATE TRIGGER update_suppliers_updated_at
+  BEFORE UPDATE ON suppliers
+  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- =============================================================================
+-- PURCHASES TABLE
+-- =============================================================================
+
+CREATE TABLE IF NOT EXISTS purchases (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  material_id uuid REFERENCES materials(id) ON DELETE SET NULL,
+  item_name text NOT NULL,
+  quantity numeric(12,2) NOT NULL DEFAULT 0,
+  price_per_unit numeric(12,2) NOT NULL DEFAULT 0,
+  total_paid numeric(12,2) NOT NULL DEFAULT 0,
+  purchase_date date NOT NULL DEFAULT CURRENT_DATE,
+  created_at timestamptz DEFAULT now()
+);
+
+ALTER TABLE purchases ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Anyone can read purchases"
+  ON purchases FOR SELECT TO public USING (true);
+
+CREATE POLICY "Authenticated users can manage purchases"
+  ON purchases FOR ALL TO authenticated USING (true) WITH CHECK (true);
+
+-- =============================================================================
+-- RECIPES TABLE (COST PER SERVING)
+-- =============================================================================
+
+CREATE TABLE IF NOT EXISTS recipes (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  menu_item_id uuid REFERENCES menu_items(id) ON DELETE CASCADE,
+  material_id uuid REFERENCES materials(id) ON DELETE CASCADE,
+  quantity_used numeric(12,4) NOT NULL DEFAULT 0,
+  created_at timestamptz DEFAULT now()
+);
+
+ALTER TABLE recipes ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Anyone can read recipes"
+  ON recipes FOR SELECT TO public USING (true);
+
+CREATE POLICY "Authenticated users can manage recipes"
+  ON recipes FOR ALL TO authenticated USING (true) WITH CHECK (true);
+
+-- =============================================================================
 -- INVENTORY MANAGEMENT FUNCTIONS
 -- =============================================================================
 

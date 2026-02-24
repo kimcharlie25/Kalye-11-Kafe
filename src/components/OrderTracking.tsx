@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Clock, CheckCircle, XCircle, RefreshCw, Package, MapPin, Phone, User, Calendar, DollarSign, FileText, Search, AlertCircle } from 'lucide-react';
+import { ArrowLeft, Clock, CheckCircle, XCircle, RefreshCw, Package, MapPin, Phone, User, Calendar, DollarSign, FileText, Search, AlertCircle, CreditCard } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { usePaymentMethods, PaymentMethod } from '../hooks/usePaymentMethods';
 import type { OrderWithItems } from '../hooks/useOrders';
 
 interface OrderTrackingProps {
@@ -13,6 +14,7 @@ const OrderTracking: React.FC<OrderTrackingProps> = ({ onBack }) => {
   const [order, setOrder] = useState<OrderWithItems | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { paymentMethods } = usePaymentMethods();
 
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
@@ -88,7 +90,7 @@ const OrderTracking: React.FC<OrderTrackingProps> = ({ onBack }) => {
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!searchValue.trim()) {
       setError('Please enter a search value');
       return;
@@ -117,13 +119,13 @@ const OrderTracking: React.FC<OrderTrackingProps> = ({ onBack }) => {
             .limit(100);
 
           if (fetchError) throw fetchError;
-          
+
           const searchValueUpper = searchValue.trim().toUpperCase();
-          const matchingOrder = data?.find(order => 
+          const matchingOrder = data?.find(order =>
             order.id.slice(-8).toUpperCase().includes(searchValueUpper) ||
             order.id.toUpperCase().includes(searchValueUpper)
           );
-          
+
           if (matchingOrder) {
             setOrder(matchingOrder as OrderWithItems);
           } else {
@@ -158,7 +160,7 @@ const OrderTracking: React.FC<OrderTrackingProps> = ({ onBack }) => {
           .limit(1);
 
         if (fetchError) throw fetchError;
-        
+
         if (data && data.length > 0) {
           setOrder(data[0] as OrderWithItems);
         } else {
@@ -213,22 +215,20 @@ const OrderTracking: React.FC<OrderTrackingProps> = ({ onBack }) => {
               <button
                 type="button"
                 onClick={() => setSearchType('orderId')}
-                className={`flex-1 px-4 py-2 rounded-lg border-2 transition-all ${
-                  searchType === 'orderId'
+                className={`flex-1 px-4 py-2 rounded-lg border-2 transition-all ${searchType === 'orderId'
                     ? 'border-red-600 bg-red-50 text-red-700 font-medium'
                     : 'border-gray-300 text-gray-700 hover:border-gray-400'
-                }`}
+                  }`}
               >
                 Order ID
               </button>
               <button
                 type="button"
                 onClick={() => setSearchType('phone')}
-                className={`flex-1 px-4 py-2 rounded-lg border-2 transition-all ${
-                  searchType === 'phone'
+                className={`flex-1 px-4 py-2 rounded-lg border-2 transition-all ${searchType === 'phone'
                     ? 'border-red-600 bg-red-50 text-red-700 font-medium'
                     : 'border-gray-300 text-gray-700 hover:border-gray-400'
-                }`}
+                  }`}
               >
                 Phone Number
               </button>
@@ -377,7 +377,7 @@ const OrderTracking: React.FC<OrderTrackingProps> = ({ onBack }) => {
                       )}
                       {item.add_ons && item.add_ons.length > 0 && (
                         <p className="text-sm text-gray-600">
-                          Add-ons: {item.add_ons.map((addon: any) => 
+                          Add-ons: {item.add_ons.map((addon: any) =>
                             addon.quantity > 1 ? `${addon.name} x${addon.quantity}` : addon.name
                           ).join(', ')}
                         </p>
@@ -391,6 +391,68 @@ const OrderTracking: React.FC<OrderTrackingProps> = ({ onBack }) => {
                 ))}
               </div>
             </div>
+
+            {/* Payment Information */}
+            {order.payment_method.toLowerCase() !== 'cash' && (
+              <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                  <DollarSign className="h-5 w-5 text-red-600" />
+                  Payment Information
+                </h3>
+                {(() => {
+                  const methodDetails = paymentMethods.find(m => m.name.toLowerCase() === order.payment_method.toLowerCase());
+                  if (!methodDetails) {
+                    return <p className="text-sm text-gray-500 italic uppercase tracking-wider">Payment method details not available for {order.payment_method}</p>;
+                  }
+                  return (
+                    <div className="space-y-6">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="flex items-start gap-3">
+                          <div className="p-2 bg-red-50 rounded-lg">
+                            <CreditCard className="h-5 w-5 text-red-600" />
+                          </div>
+                          <div>
+                            <p className="text-sm text-gray-500">Method</p>
+                            <p className="font-semibold text-gray-900 uppercase">{methodDetails.name}</p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-start gap-3">
+                          <div className="p-2 bg-red-50 rounded-lg">
+                            <User className="h-5 w-5 text-red-600" />
+                          </div>
+                          <div>
+                            <p className="text-sm text-gray-500">Account Name</p>
+                            <p className="font-semibold text-gray-900 uppercase">{methodDetails.account_name}</p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-start gap-3">
+                          <div className="p-2 bg-red-50 rounded-lg">
+                            <Phone className="h-5 w-5 text-red-600" />
+                          </div>
+                          <div>
+                            <p className="text-sm text-gray-500">Account Number</p>
+                            <p className="font-semibold text-gray-900">{methodDetails.account_number}</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {methodDetails.qr_code_url && (
+                        <div className="pt-4 flex flex-col items-center bg-gray-50 p-6 rounded-lg border border-dashed border-gray-300">
+                          <p className="text-[10px] text-gray-400 font-sans uppercase tracking-widest mb-4">Scan QR Code to Pay</p>
+                          <img
+                            src={methodDetails.qr_code_url}
+                            alt={`${methodDetails.name} QR Code`}
+                            className="w-48 h-48 object-contain bg-white p-2 border border-gray-200"
+                          />
+                        </div>
+                      )}
+                    </div>
+                  );
+                })()}
+              </div>
+            )}
 
             {/* Search Again Button */}
             <div className="text-center">

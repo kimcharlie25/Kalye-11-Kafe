@@ -10,14 +10,15 @@ export const useMenu = () => {
   const fetchMenuItems = async () => {
     try {
       setLoading(true);
-      
+
       // Fetch menu items with their variations and add-ons
       const { data: items, error: itemsError } = await supabase
         .from('menu_items')
         .select(`
           *,
           variations (*),
-          add_ons (*)
+          add_ons (*),
+          cost_materials (*)
         `)
         .order('created_at', { ascending: true });
 
@@ -28,11 +29,11 @@ export const useMenu = () => {
         const now = new Date();
         const discountStart = item.discount_start_date ? new Date(item.discount_start_date) : null;
         const discountEnd = item.discount_end_date ? new Date(item.discount_end_date) : null;
-        
-        const isDiscountActive = item.discount_active && 
-          (!discountStart || now >= discountStart) && 
+
+        const isDiscountActive = item.discount_active &&
+          (!discountStart || now >= discountStart) &&
           (!discountEnd || now <= discountEnd);
-        
+
         // Calculate effective price
         const effectivePrice = isDiscountActive && item.discount_price ? item.discount_price : item.base_price;
 
@@ -55,17 +56,25 @@ export const useMenu = () => {
           stockQuantity: item.stock_quantity,
           lowStockThreshold: item.low_stock_threshold ?? 0,
           autoDisabled: item.track_inventory ? item.available === false : false,
-          variations: item.variations?.map(v => ({
+          variations: item.variations?.map((v: any) => ({
             id: v.id,
             name: v.name,
             price: v.price
           })) || [],
-          addOns: item.add_ons?.map(a => ({
+          addOns: item.add_ons?.map((a: any) => ({
             id: a.id,
             name: a.name,
             price: a.price,
             category: a.category
-          })) || []
+          })) || [],
+          costMaterials: item.cost_materials?.map((m: any) => ({
+            id: m.id,
+            name: m.name,
+            unitCost: m.unit_cost ?? 0,
+            quantity: m.quantity ?? 1,
+            unit: m.unit ?? 'pc'
+          })) || [],
+          totalCost: (item.cost_materials || []).reduce((sum: number, m: any) => sum + (m.unit_cost ?? 0) * (m.quantity ?? 1), 0)
         };
       }) || [];
 
@@ -147,10 +156,10 @@ export const useMenu = () => {
   const updateMenuItem = async (id: string, updates: Partial<MenuItem>) => {
     try {
       console.log('[DEBUG] updateMenuItem called with:', { id, updates });
-      
+
       // Build update object, only including defined values
       const updateData: any = {};
-      
+
       if (updates.name !== undefined) updateData.name = updates.name;
       if (updates.description !== undefined) updateData.description = updates.description;
       if (updates.basePrice !== undefined) updateData.base_price = updates.basePrice;

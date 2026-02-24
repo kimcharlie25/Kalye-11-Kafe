@@ -12,6 +12,14 @@ export interface AddOn {
   quantity?: number;
 }
 
+export interface CostMaterial {
+  id: string;
+  name: string;
+  unitCost: number;
+  quantity: number;
+  unit: string;
+}
+
 export interface MenuItem {
   id: string;
   name: string;
@@ -36,6 +44,9 @@ export interface MenuItem {
   stockQuantity?: number | null;
   lowStockThreshold?: number;
   autoDisabled?: boolean;
+  // Costing
+  costMaterials?: CostMaterial[];
+  totalCost?: number;
 }
 
 export interface CartItem extends MenuItem {

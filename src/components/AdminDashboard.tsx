@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Edit, Trash2, Save, X, ArrowLeft, Coffee, TrendingUp, Package, Users, FolderOpen, Settings, ShoppingCart, LogOut, Boxes, Utensils } from 'lucide-react';
+import { Plus, Edit, Trash2, Save, X, ArrowLeft, Coffee, TrendingUp, Package, Users, FolderOpen, Settings, ShoppingCart, LogOut, Boxes, Utensils, CreditCard, ClipboardList } from 'lucide-react';
 import { MenuItem, Variation, AddOn } from '../types';
 import { addOnCategories } from '../data/menuData';
 import { useMenu } from '../hooks/useMenu';
@@ -13,12 +13,15 @@ import InventoryManager from './InventoryManager';
 import CustomersManager from './CustomersManager';
 import TablesManager from './TablesManager';
 import KitchenDisplay from './KitchenDisplay';
+import PaymentMethodManager from './PaymentMethodManager';
+
+import OrderStatusBoard from './OrderStatusBoard';
 
 const AdminDashboard: React.FC = () => {
   const { user, signOut } = useAuth();
-  const { menuItems, loading, addMenuItem, updateMenuItem, deleteMenuItem } = useMenu();
+  const { menuItems, loading, addMenuItem, updateMenuItem, deleteMenuItem, refetch } = useMenu();
   const { categories } = useCategories();
-  const [currentView, setCurrentView] = useState<'dashboard' | 'items' | 'add' | 'edit' | 'categories' | 'settings' | 'orders' | 'inventory' | 'customers' | 'tables' | 'kitchen'>('dashboard');
+  const [currentView, setCurrentView] = useState<'dashboard' | 'items' | 'add' | 'edit' | 'categories' | 'settings' | 'orders' | 'inventory' | 'customers' | 'tables' | 'kitchen' | 'payment-methods' | 'order-status'>('dashboard');
   const [editingItem, setEditingItem] = useState<MenuItem | null>(null);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -953,10 +956,7 @@ const AdminDashboard: React.FC = () => {
   if (currentView === 'inventory') {
     return (
       <InventoryManager
-        items={menuItems}
         onBack={() => setCurrentView('dashboard')}
-        onUpdateItem={updateMenuItem}
-        loading={loading}
       />
     );
   }
@@ -975,6 +975,18 @@ const AdminDashboard: React.FC = () => {
   if (currentView === 'kitchen') {
     return <KitchenDisplay onBack={() => setCurrentView('dashboard')} />;
   }
+
+  // Order Status Board View
+  if (currentView === 'order-status') {
+    return <OrderStatusBoard onBack={() => setCurrentView('dashboard')} />;
+  }
+
+  // Payment Methods View
+  if (currentView === 'payment-methods') {
+    return <PaymentMethodManager onBack={() => setCurrentView('dashboard')} />;
+  }
+
+
 
   // Dashboard View
   return (
@@ -1086,6 +1098,7 @@ const AdminDashboard: React.FC = () => {
                 <Boxes className="h-5 w-5 text-gray-400" />
                 <span className="font-medium text-gray-900">Inventory Management</span>
               </button>
+
               <button
                 onClick={() => setCurrentView('categories')}
                 className="w-full flex items-center space-x-3 p-3 text-left hover:bg-gray-50 rounded-lg transition-colors duration-200"
@@ -1120,6 +1133,20 @@ const AdminDashboard: React.FC = () => {
               >
                 <Utensils className="h-5 w-5 text-gray-400" />
                 <span className="font-medium text-gray-900">Kitchen Display</span>
+              </button>
+              <button
+                onClick={() => setCurrentView('order-status')}
+                className="w-full flex items-center space-x-3 p-3 text-left hover:bg-gray-50 rounded-lg transition-colors duration-200"
+              >
+                <ClipboardList className="h-5 w-5 text-gray-400" />
+                <span className="font-medium text-gray-900">Order Status Board</span>
+              </button>
+              <button
+                onClick={() => setCurrentView('payment-methods')}
+                className="w-full flex items-center space-x-3 p-3 text-left hover:bg-gray-50 rounded-lg transition-colors duration-200"
+              >
+                <CreditCard className="h-5 w-5 text-gray-400" />
+                <span className="font-medium text-gray-900">Manage Payment Methods</span>
               </button>
               <button
                 onClick={() => setCurrentView('settings')}
